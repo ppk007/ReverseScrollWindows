@@ -46,8 +46,8 @@ $DevParams = "Device Parameters"
 #
 $AskForEach = $false
 
-Write-Output "This script will make all scrolling devices on this computer behave like a Mac - scrolling up scrolls the window up and vice versa"
-
+Write-Output "This script will reverse the scrolling direction on on this computer - scrolling up scrolls the window up and vice versa."
+Write-Output "Some people find this more intuitive."
 $ans = Read-Host "Continue? Y|N [Y]"
 
 if ($ans -eq "N" -or $ans -eq "n") {
@@ -82,5 +82,5 @@ if ($ans -eq "Y" -or $ans -eq "y") {
     Restart-Computer
 }
 else {
-    Write-Output "Exiting without restarting. The scroll settings will not be effective until the computer is restarted."
+    Write-Output "Exiting without restarting. The scroll settings will not take effect until the computer is restarted."
 }
