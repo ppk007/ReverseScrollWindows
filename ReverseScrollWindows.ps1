@@ -46,8 +46,8 @@ $DevParams = "Device Parameters"
 #
 $AskForEach = $false
 
-Write-Output "This script will reverse the scrolling direction on on this computer - scrolling up scrolls the window up and vice versa."
-Write-Output "Some people find this more intuitive."
+Write-Output "This script will reverse the scrolling direction on this computer - scrolling up scrolls the window up and vice versa."
+Write-Output "Some people find this more intuitive. This is the way scrolling works on Mac OS"
 $ans = Read-Host "Continue? Y|N [Y]"
 
 if ($ans -eq "N" -or $ans -eq "n") {
