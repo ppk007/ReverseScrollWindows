@@ -30,8 +30,8 @@ if ($ans -eq "N" -or $ans -eq "n") {
     Exit
 }
 
-# For every child item in $HIDPath, check if there is a child (grandchild of $HIDPath) of the form "Device Parameters/FlipFlopWheel".
-# We are looking for keys that look like $HIDPath/<child>/<grandchild/Device Parameters/FlipFlopWheel. If one exists, set it the
+# For every child item in $HIDPath, check if there is a child (grandchild of $HIDPath) of the form "Device Parameters\FlipFlopWheel".
+# We are looking for keys that look like $HIDPath\<child>\<grandchild/Device Parameters\FlipFlopWheel. If one exists, set the
 # value to 1.
 #
 Get-ChildItem -Path $HIDPath | ForEach-Object { 
@@ -50,7 +50,7 @@ Get-ChildItem -Path $HIDPath | ForEach-Object {
 
 }
 
-# The setting will not take effect until the computer is restarted. Ask the user if we can restart the computer now.
+# The setting will not take effect until the computer is restarted. Ask the user if the computer can be restarted now.
 #
 $ans = Read-Host "Restart computer? Y|N [N] "
 
