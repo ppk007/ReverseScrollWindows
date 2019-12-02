@@ -1,7 +1,7 @@
 # ReverseScrollWindows
 A PowerShell Script to reverse the scroll direction on Windows machines. Scrolling up moves the contents of the window up and scrolling down moves it down. This is the way it works on Mac OS. Some people find it more intuitive.
 
-To undo this, you will have to edit the registry. If you are not comfortable doing that, make sure this is what you want before you run the script on your computer.
+To undo this, run the script with the -Reset commandline parameter. This will reset the scrolling behavior to the Windows default behavior.
 
 Legalese below.
 
