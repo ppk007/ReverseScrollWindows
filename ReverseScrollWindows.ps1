@@ -130,7 +130,7 @@ if ($ans -eq "N" -or $ans -eq "n") {
             Write-Verbose "Set $$hidDevParams\$FlipFlopWheel"
         }
 
-    }
+}
 # The setting will not take effect until the computer is restarted. Ask the user if the computer can be restarted now.
 #
 $ans = Read-Host "Restart computer? Y|N [N] "
