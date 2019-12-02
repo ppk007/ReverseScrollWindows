@@ -71,9 +71,8 @@ SOFTWARE.
 #
 param([switch]$Reset = $false)
 
-# Path in the registry for HID compliant mouse devices
+# Registry path for HID compliant mouse devices
 #
-#$HIDPath = "HKLM:\SYSTEM\CurrentControlSet\Enum\HID"
 $HIDPath = "HKLM:\SYSTEM\CurrentControlSet\Enum"
 
 # Name of the directory in the registry that containst FlipFlopWheel
@@ -95,6 +94,8 @@ if ($Reset) {
 # For enhancement: The script should allow the user to individually flip the scrolling device - NOT CURRENTLY IMPLEMENTED
 #
 
+# Print out explanation and ask for permission to continue
+#
 if ($regKeyVal) {
     Write-Output "This script will reverse the scrolling direction for all devices on this computer."
     Write-Output "Scrolling up will scroll the contents of the window up and vice versa."
@@ -131,7 +132,8 @@ if ($ans -eq "N" -or $ans -eq "n") {
         }
 
 }
-# The setting will not take effect until the computer is restarted. Ask the user if the computer can be restarted now.
+# The setting will not take effect until the computer is restarted. Ask the
+# user if the computer can be restarted now.
 #
 $ans = Read-Host "Restart computer? Y|N [N] "
 
