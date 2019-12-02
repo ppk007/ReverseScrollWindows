@@ -62,7 +62,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 #>
 
-# This script ensures administrator privileges because it writes to the registry and it tries to restart the computer.
+# This script requires administrator privileges because it writes to the
+# registry and it tries to restart the computer.
 #
 #Requires -RunAsAdministrator
 
@@ -119,11 +120,11 @@ if ($ans -eq "N" -or $ans -eq "n") {
         # Construct the path to the DeviceParams registry directory
         #
         $hidDevParams = "$HIDPath\$_\$DevParams"
-        Write-Verbose "Setting $hidDevParams\$FlipFlopWheel"
 
         # Then check if the $FlipFlopWheel key exists and set it to the
         # appropriate value if it does.
         #
+        Write-Verbose "Setting $hidDevParams\$FlipFlopWheel"
         if (Get-ItemProperty -Path "$hidDevParams" -name $FlipFlopWheel -ErrorAction SilentlyContinue) {
             Set-ItemProperty -Path "$hidDevParams" -Name $FlipFlopWheel -Value $regKeyVal -Force | Out-Null
             Write-Verbose "Set $$hidDevParams\$FlipFlopWheel"
