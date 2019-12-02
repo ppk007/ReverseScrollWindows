@@ -1,4 +1,38 @@
 <#
+    .SYNOPSIS
+    Flip the default scroll direction for all scrolling devices in the
+    system
+
+    .DESCRIPTION
+    This PowerShell script will flip the default scroll direction for all
+    scrolling devices in the system. This makes them behave like a Mac.
+    Scrolling down moves the window down and scrolling up moves the
+    window up. This is the reverse of what happens on Windows.
+
+    The -Reset commandline argument will reset it back to the Windows
+    style for all scrolling devices on this computer
+
+    .PARAMETER Reset
+    Resets the scrolling behavior to the Windows default for all scrolling
+    devices on this computer.
+
+    .INPUTS
+    None. You cannot pipe objects to ReverseScrollWindows.
+
+    .OUTPUTS
+    None.
+
+    .EXAMPLE
+    C:\PS> ReverseScrollWindows
+
+    .EXAMPLE
+    C:\PS> ReverseScrollWindows -Reset
+
+    .LINK
+    Online version: https://github.com/ppk007/ReverseScrollWindows
+#>
+
+<#
 MIT License
 
 Copyright (c) [2019] [Pravin Kumar]
@@ -22,32 +56,48 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 #>
 
+# This script ensures administrator privileges because it writes to the registry and it tries to restart the computer.
+#
 #Requires -RunAsAdministrator
 
-# This PowerShell script will flip the default scroll direction for all scrolling devices in the system. This makes them
-# behave like a Mac.
-# Scrolling down moves the window down and scrolling up moves the window up. This is the reverse of what happens on
-# Windows.
+# Handle parameters
 #
+param([switch]$Reset = $false)
 
 # Path in the registry for mouse devices
 #
 $HIDPath = "HKLM:\SYSTEM\CurrentControlSet\Enum\HID"
 
-# Name of the registry key to reverse the scroll
-#
-$FlipFlopWheel = "FlipFlopWheel"
-
 # Name of the directory in the registry that containst FlipFlopWheel
 #
 $DevParams = "Device Parameters"
 
+# Name of the registry key to reverse the scroll
+#
+$FlipFlopWheel = "FlipFlopWheel"
+
+# The value of $FlipFlopWheel is 1 unless $Reset is used.
+#
+$regKeyVal = 1
+
+if ($Reset) {
+    $regKeyVal = 0
+}
+
 # For enhancement: The script should allow the user to individually flip the scrolling device - NOT CURRENTLY IMPLEMENTED
 #
-$AskForEach = $false
+# $AskForEach = $false
 
-Write-Output "This script will reverse the scrolling direction on this computer - scrolling up scrolls the window up and vice versa."
-Write-Output "Some people find this more intuitive. This is the way scrolling works on Mac OS"
+if ($regKeyVal) {
+    Write-Output "This script will reverse the scrolling direction for all devices on this computer."
+    Write-Output "Scrolling up will scroll the contents of the window up and vice versa."
+    Write-Output "This is the way scrolling works on Mac OS."
+}
+else {
+    Write-Output "This script will set the scrolling direction for all devices on this computer."
+    Write-Output "Scrolling up will scroll the contents of the window down and vice versa."
+    Write-Output "This is the way scrolling works by default on Windows."
+}
 $ans = Read-Host "Continue? Y|N [Y]"
 
 if ($ans -eq "N" -or $ans -eq "n") {
@@ -55,7 +105,7 @@ if ($ans -eq "N" -or $ans -eq "n") {
 }
 
 # For every child item in $HIDPath, check if there is a child (grandchild of $HIDPath) of the form "Device Parameters\FlipFlopWheel".
-# We are looking for keys that look like $HIDPath\<child>\<grandchild/Device Parameters\FlipFlopWheel. If one exists, set the
+# We are looking for keys that look like $HIDPath\<child>\<grandchild\Device Parameters\FlipFlopWheel. If one exists, set the
 # value to 1.
 #
 Get-ChildItem -Path $HIDPath | ForEach-Object { 
@@ -67,8 +117,8 @@ Get-ChildItem -Path $HIDPath | ForEach-Object {
         # If there is a FlipFlopWheel key, set it to 1
         #
         if (Get-ItemProperty -Path "$hidGrandChild\$DevParams" -name $FlipFlopWheel -ErrorAction SilentlyContinue) {
-            Write-Verbose "Setting $hidGrandChild\$DevParams/$FlipFlopWheel ..."
-            Set-ItemProperty -Path "$hidGrandChild\$DevParams" -Name $FlipFlopWheel -Value 1 -Force | Out-Null
+            Write-Verbose "Setting $hidGrandChild\$DevParams\$FlipFlopWheel ..."
+            Set-ItemProperty -Path "$hidGrandChild\$DevParams" -Name $FlipFlopWheel -Value $regKeyVal -Force | Out-Null
         }
     }
 
