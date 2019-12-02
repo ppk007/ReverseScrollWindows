@@ -1,16 +1,22 @@
 <#
     .SYNOPSIS
-    Flip the default scroll direction for all scrolling devices in the
+    Flip the default scroll direction for all active scrolling devices in the
     system
 
     .DESCRIPTION
     This PowerShell script will flip the default scroll direction for all
-    scrolling devices in the system. This makes them behave like a Mac.
-    Scrolling down moves the window down and scrolling up moves the
-    window up. This is the reverse of what happens on Windows.
+    active scrolling devices in the system. This makes them behave like a
+    touchscreen or a Mac. This is the reverse of the Windows default
+    behavior.
+
+    After running the script, scrolling down moves the contents of the
+    window down and scrolling up moves the contents of the window up -
+    reverse of what happens on Windows.
 
     The -Reset commandline argument will reset it back to the Windows
-    style for all scrolling devices on this computer
+    default behavior for all scrolling devices on this computer
+
+    If you install a new device, you will have to re-run this script.
 
     .PARAMETER Reset
     Resets the scrolling behavior to the Windows default for all scrolling
@@ -64,9 +70,10 @@ SOFTWARE.
 #
 param([switch]$Reset = $false)
 
-# Path in the registry for mouse devices
+# Path in the registry for HID compliant mouse devices
 #
-$HIDPath = "HKLM:\SYSTEM\CurrentControlSet\Enum\HID"
+#$HIDPath = "HKLM:\SYSTEM\CurrentControlSet\Enum\HID"
+$HIDPath = "HKLM:\SYSTEM\CurrentControlSet\Enum"
 
 # Name of the directory in the registry that containst FlipFlopWheel
 #
@@ -86,12 +93,11 @@ if ($Reset) {
 
 # For enhancement: The script should allow the user to individually flip the scrolling device - NOT CURRENTLY IMPLEMENTED
 #
-# $AskForEach = $false
 
 if ($regKeyVal) {
     Write-Output "This script will reverse the scrolling direction for all devices on this computer."
     Write-Output "Scrolling up will scroll the contents of the window up and vice versa."
-    Write-Output "This is the way scrolling works on Mac OS."
+    Write-Output "This is the way scrolling works on touchscreens as well as Mac OS."
 }
 else {
     Write-Output "This script will set the scrolling direction for all devices on this computer."
@@ -104,26 +110,26 @@ if ($ans -eq "N" -or $ans -eq "n") {
     Exit
 }
 
-# For every child item in $HIDPath, check if there is a child (grandchild of $HIDPath) of the form "Device Parameters\FlipFlopWheel".
-# We are looking for keys that look like $HIDPath\<child>\<grandchild\Device Parameters\FlipFlopWheel. If one exists, set the
-# value to 1.
+# Get the device id (pnpDeviceID) of all the active HID compliant mouse devices
+# and operate on each device.
 #
-Get-ChildItem -Path $HIDPath | ForEach-Object { 
-    $hidChild = "Registry::$_"
-    Write-Verbose "Looking at $hidChild ..."
-    Get-ChildItem -Path $hidChild | ForEach-Object {
-        $hidGrandChild = "Registry::$_"
-        Write-Verbose "Looking at GC $hidGrandChild for $DevParams/$FlipFlopWheel"
-        # If there is a FlipFlopWheel key, set it to 1
+ Get-WmiObject win32_PointingDevice | Where-Object { $_.Description -match "HID-compliant mouse"} | 
+    Select-Object -ExpandProperty pnpDeviceID | ForEach-Object {
+
+        # Construct the path to the DeviceParams registry directory
         #
-        if (Get-ItemProperty -Path "$hidGrandChild\$DevParams" -name $FlipFlopWheel -ErrorAction SilentlyContinue) {
-            Write-Verbose "Setting $hidGrandChild\$DevParams\$FlipFlopWheel ..."
-            Set-ItemProperty -Path "$hidGrandChild\$DevParams" -Name $FlipFlopWheel -Value $regKeyVal -Force | Out-Null
+        $hidDevParams = "$HIDPath\$_\$DevParams"
+        Write-Verbose "Setting $hidDevParams\$FlipFlopWheel"
+
+        # Then check if the $FlipFlopWheel key exists and set it to the
+        # appropriate value if it does.
+        #
+        if (Get-ItemProperty -Path "$hidDevParams" -name $FlipFlopWheel -ErrorAction SilentlyContinue) {
+            Set-ItemProperty -Path "$hidDevParams" -Name $FlipFlopWheel -Value $regKeyVal -Force | Out-Null
+            Write-Verbose "Set $$hidDevParams\$FlipFlopWheel"
         }
+
     }
-
-}
-
 # The setting will not take effect until the computer is restarted. Ask the user if the computer can be restarted now.
 #
 $ans = Read-Host "Restart computer? Y|N [N] "
