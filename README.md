@@ -6,9 +6,10 @@ If you do not want to change the behavior for all scrolling devices on your comp
 To undo this, run the script with the -Reset commandline parameter. This will reset the scrolling behavior to the Windows default behavior for **ALL SCROLLING DEVICES**.
 
 To use:
-1. Download ReverseScrollWindows.ps1
-2. Run it
+1. Download ReverseScrollWindows.ps1 start up a cmd shell or PowerScript shell and run it
+2. To revert back to the windows default behavior, run it with the -Reset commandline parameter
 3. If you are on the Windows Insider list and download often, it might useful to put it in Documents\WindowsPowershell and add that directory to your path
+4. If the system will not let you run the script. Check your execution policy. This [page] (https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-6) has information on execution policy.
 
 Legalese below.
 
