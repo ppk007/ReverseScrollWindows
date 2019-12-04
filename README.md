@@ -9,7 +9,7 @@ To use:
 1. Download ReverseScrollWindows.ps1 start up a cmd shell or PowerScript shell and run it
 2. To revert back to the windows default behavior, run it with the -Reset commandline parameter
 3. If you are on the Windows Insider list and download often, it might useful to put it in Documents\WindowsPowershell and add that directory to your path
-4. If the system will not let you run the script. Check your execution policy. This [page] (https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-6) has information on execution policy.
+4. If the system will not let you run the script. Check your execution policy. This [page](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-6) has information on execution policy.
 
 Legalese below.
 
