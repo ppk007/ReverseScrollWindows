@@ -5,6 +5,11 @@ If you do not want to change the behavior for all scrolling devices on your comp
 
 To undo this, run the script with the -Reset commandline parameter. This will reset the scrolling behavior to the Windows default behavior for **ALL SCROLLING DEVICES**.
 
+To use:
+1. Download ReverseScrollWindows.ps1
+2. Run it
+3. If you are on the Windows Insider list and download often, it might useful to put it in Documents\WindowsPowershell and add that directory to your path
+
 Legalese below.
 
 MIT License
