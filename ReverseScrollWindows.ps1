@@ -63,7 +63,7 @@ SOFTWARE.
 #>
 
 # This script requires administrator privileges because it writes to the
-# registry and it tries to restart the computer.
+# registry.
 #
 #Requires -RunAsAdministrator
 
